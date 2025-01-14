@@ -13,13 +13,13 @@ const router = Router();
 // Rutas de pedidos
 router
   .route("/")
-  .get([validarJWT], obtenerPedidos) // Proteger con JWT (puede incluir un middleware adicional para validar roles)
-  .post([validarJWT], crearPedido); // Solo usuarios autenticados pueden crear pedidos
+  .get([validarJWT], obtenerPedidos) 
+  .post([validarJWT], crearPedido); 
 
 router
   .route("/:id")
-  .get([validarJWT], obtenerPedidoPorId) // Obtener un pedido específico (verificar propiedad si es necesario)
-  .put([validarJWT], cambiarEstadoPedido) // Cambiar estado (proteger con un middleware de rol)
-  .delete([validarJWT], eliminarPedido); // Eliminar pedido (proteger con un middleware de rol)
+  .get([validarJWT], obtenerPedidoPorId) 
+  .put([validarJWT], cambiarEstadoPedido) 
+  .delete([validarJWT], eliminarPedido); 
 
 export default router;

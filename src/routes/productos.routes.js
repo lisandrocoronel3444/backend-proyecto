@@ -14,14 +14,14 @@ const router = Router();
 
 router
   .route("/")
-  .post([validarJWT, validacionProducto], crearProducto) // Ya protegido
-  .get(obtenerProductos); // Público si es para mostrar a los clientes
+  .post([validarJWT, validacionProducto], crearProducto) 
+  .get(obtenerProductos); 
 
 router
   .route("/:id")
-  .get(obtenerUnProducto) // Público si es para mostrar a los clientes
-  .delete([validarJWT], borrarProducto) // Agregar validarJWT
-  .put([validarJWT, validacionProducto], editarProducto); // Agregar validarJWT
+  .get(obtenerUnProducto)
+  .delete([validarJWT], borrarProducto) 
+  .put([validarJWT, validacionProducto], editarProducto); 
 
 
 export default router;
