@@ -1,0 +1,26 @@
+{
+  "name": "backendproyectofinal",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "babel-node index.js",
+    "dev": "nodemon --exec babel-node index.js"
+  },
+  
+  "keywords": [],
+  "author": "Lisandro COronel",
+  "license": "ISC",
+  "description": "backend de mi proyecto final para rollingcode",
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-validator": "^7.2.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.9.3",
+    "morgan": "^1.10.0"
+  }
+}
