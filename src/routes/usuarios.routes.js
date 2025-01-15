@@ -16,7 +16,7 @@ router
 
 router
   .route("/nuevo")
-  .post([validarJWT],
+  .post(
     [
       check("nombreUsuario").notEmpty().withMessage("El nombre es obligatorio"),
       check("email", "El email es obligatorio").isEmail(),
