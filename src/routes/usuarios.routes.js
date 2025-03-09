@@ -6,36 +6,29 @@ import {
   login,
 } from "../controllers/usuario.controllers.js";
 import validarJWT from "../helpers/token-verify.js";
-
+import validarAdmin from "../helpers/validarAdmin.js";
 const router = Router();
 
-// Rutas públicas
-router
-  .route("/")
-  .post(login); // Inicio de sesión (no requiere JWT)
+// Ruta de login (pública)
+router.post("/", login);
 
-router
-  .route("/nuevo")
-  .post(
-    [
-      check("nombreUsuario").notEmpty().withMessage("El nombre es obligatorio"),
-      check("email", "El email es obligatorio").isEmail(),
-      check("password", "El password debe de ser de 6 caracteres")
-        .isLength({
-          min: 6,
-          max: 15,
-        })
-        .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/)
-        .withMessage(
-          "El password debe contener 8 caracteres (al menos 1 letra mayúscula, 1 letra minúscula y 1 numero) también puede incluir carácteres especiales"
-        ),
-    ],
-    crearUsuario
-  ); // Registro (no requiere JWT)
+// Ruta para crear un nuevo usuario (pública)
+router.post(
+  "/nuevo",
+  [
+    check("nombreUsuario").notEmpty().withMessage("El nombre es obligatorio"),
+    check("email", "El email es obligatorio").isEmail(),
+    check("password", "El password debe de ser de 8 caracteres")
+      .isLength({ min: 8, max: 15 })
+      .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/)
+      .withMessage(
+        "El password debe contener 8 caracteres (al menos 1 letra mayúscula, 1 letra minúscula y 1 número). También puede incluir caracteres especiales"
+      ),
+  ],
+  crearUsuario
+);
 
-// Rutas protegidas
-router
-  .route("/")
-  .get([validarJWT], listarUsuarios); // Solo usuarios autenticados pueden listar usuarios
+// Ruta para listar usuarios (solo accesible para administradores)
+router.get("/usuarios", [validarJWT, validarAdmin], listarUsuarios);
 
 export default router;

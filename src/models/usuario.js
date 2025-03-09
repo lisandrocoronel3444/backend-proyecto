@@ -1,20 +1,25 @@
-import mongoose, {Schema} from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const usuarioSchema = new Schema({
-    nombreUsuario:{
+    nombreUsuario: {
         type: String,
         maxlength: 30,
         required: true
     },
-    email:{
+    email: {
         type: String,
         maxlength: 200,
-        unique:true,
-        required:true
+        unique: true,
+        required: true
     },
-    password:{
+    password: {
         type: String,
-        required:true
+        required: true
+    },
+    rol: {
+        type: String,
+        enum: ['operador', 'admin'],  // Solo puede ser 'operador' o 'admin'
+        default: 'operador'  // Por defecto será 'operador'
     }
 });
 

@@ -4,25 +4,29 @@ import Usuario from "../models/usuario.js";
 import bcrypt from "bcrypt"
 export const crearUsuario = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, rol } = req.body;
 
-    let usuario = await Usuario.findOne({ email }); 
-    
+    let usuario = await Usuario.findOne({ email });
+
     if (usuario) {
-   
       return res.status(400).json({
-        mensaje: "ya existe un usuario con el correo enviado",
+        mensaje: "Ya existe un usuario con el correo enviado",
       });
     }
 
-    usuario = new Usuario(req.body);
-    const salt = bcrypt.genSaltSync(10);
-    usuario.password = bcrypt.hashSync(password,salt)
+    usuario = new Usuario({
+      ...req.body,
+      password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
+      rol: rol || "operador" // Si no se envía un rol, será operador por defecto
+    });
+
     await usuario.save();
+    
     res.status(201).json({
-      mensaje: "usuario creado",
-      nombre: usuario.nombre,
+      mensaje: "Usuario creado",
+      nombreUsuario: usuario.nombreUsuario,
       uid: usuario._id,
+      rol: usuario.rol // Enviar el rol en la respuesta
     });
   } catch (error) {
     console.log(error);
@@ -31,6 +35,7 @@ export const crearUsuario = async (req, res) => {
     });
   }
 };
+
 
 export const listarUsuarios = async (req, res) => {
 
@@ -47,37 +52,39 @@ export const listarUsuarios = async (req, res) => {
   }
 };
 
-export const login = async(req, res)=>{
+export const login = async (req, res) => {
   try {
-    const {email, password} = req.body;
-    let usuario = await Usuario.findOne({email : email});
-    if(!usuario){
-      return res.status(404).json({
-        mensaje: "Correo o password invalido"
-      })
-    }
-    const passwordValido = bcrypt.compareSync(password, usuario.password)
-    if(!passwordValido){
-      return res.status(404).json({
-        mensaje: "Correo o password invalido"
-      })
-    }
-    //genero token
-    const token = await generarJWT(usuario.nombreUsuario);
+    const { email, password } = req.body;
+    let usuario = await Usuario.findOne({ email });
 
+    if (!usuario) {
+      return res.status(404).json({
+        mensaje: "Correo o password inválido"
+      });
+    }
 
+    const passwordValido = bcrypt.compareSync(password, usuario.password);
+    if (!passwordValido) {
+      return res.status(404).json({
+        mensaje: "Correo o password inválido"
+      });
+    }
+
+    // Generar token incluyendo el rol
+    const token = await generarJWT(usuario.nombreUsuario, usuario.rol);
 
     res.status(200).json({
-      mensaje: "usuario correcto",
+      mensaje: "Usuario correcto",
       nombreUsuario: usuario.nombreUsuario,
-      token
-    })
-    
+      token,
+      rol: usuario.rol // Enviar el rol en la respuesta
+    });
+
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(404).json({
       mensaje: "Usuario o password incorrectos"
-     
     });
   }
-}
+};
+

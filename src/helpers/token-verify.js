@@ -1,18 +1,24 @@
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
 
-const validarJWT = (req,res,next)=>{
+const validarJWT = (req, res, next) => {
     const token = req.header('x-token');
-    if(!token){
+    if (!token) {
         return res.status(401).json({
-            mensaje: 'No hay token en la peticion'
-        })
+            mensaje: 'No hay token en la petición'
+        });
     }
-    try{ 
-        const payload = jwt.verify(token, process.env.SECRET_JWT) 
+
+    try {
+        const payload = jwt.verify(token, process.env.SECRET_JWT);
         req.nombreUsuario = payload.nombreUsuario; 
-    }catch(error)
-    { console.log(error) 
-        return res.status(401).json({ mensaje: 'El token no es valido' }) 
-    } next(); 
-}
+        req.rol = payload.rol; // Agregar el rol a la request
+
+    } catch (error) {
+        console.log(error);
+        return res.status(401).json({ mensaje: 'El token no es válido' });
+    }
+
+    next(); 
+};
+
 export default validarJWT;
