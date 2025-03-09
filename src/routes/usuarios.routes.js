@@ -6,7 +6,7 @@ import {
   login,
 } from "../controllers/usuario.controllers.js";
 import validarJWT from "../helpers/token-verify.js";
-import validarAdmin from "../helpers/validarAdmin.js";
+
 const router = Router();
 
 // Ruta de login (pública)
