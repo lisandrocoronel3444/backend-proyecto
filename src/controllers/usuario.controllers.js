@@ -14,11 +14,9 @@ export const crearUsuario = async (req, res) => {
       });
     }
 
-    usuario = new Usuario({
-      ...req.body,
-      password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
-      rol: rol || "operador" // Si no se envía un rol, será operador por defecto
-    });
+    usuario = new Usuario(req.body);
+    const salt = bcrypt.genSaltSync(10);
+    usuario.password = bcrypt.hashSync(password,salt);
 
     await usuario.save();
     
