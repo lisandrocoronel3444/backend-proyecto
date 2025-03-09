@@ -29,6 +29,6 @@ router.post(
 );
 
 // Ruta para listar usuarios (solo accesible para administradores)
-router.get("/usuarios", [validarJWT, validarAdmin], listarUsuarios);
+router.get("/usuarios", [validarJWT], listarUsuarios);
 
 export default router;
