@@ -12,26 +12,33 @@ export const crearPedido = async (req, res) => {
       });
     }
 
+    // Asegúrate de que los datos estén bien formateados
+    console.log("Verificando datos...");
+
     const nuevoPedido = new Pedido({
       nombreUsuario,
       productos,
       total,
-      estado: estado || 'Pendiente', // Si no se pasa el estado, usa 'pendiente' por defecto
+      estado: estado || 'Pendiente', // Si no se pasa el estado, usa 'Pendiente' por defecto
     });
 
+    console.log("Guardando pedido en la base de datos...");
     await nuevoPedido.save();
+
+    console.log("Pedido guardado exitosamente:", nuevoPedido);
 
     res.status(201).json({
       mensaje: "Pedido realizado con éxito",
       pedido: nuevoPedido,
     });
   } catch (error) {
-    console.log("Error al crear el pedido:", error);
+    console.log("Error al crear el pedido:", error); // Aquí se imprimirá el error
     res.status(500).json({
       mensaje: "Error al realizar el pedido",
     });
   }
 };
+
 
 export const obtenerPedidos = async (req, res) => {
   try {
