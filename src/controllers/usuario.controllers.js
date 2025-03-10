@@ -84,5 +84,56 @@ export const login = async (req, res) => {
       mensaje: "Usuario o password incorrectos"
     });
   }
+  
 };
+export const editarUsuario = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { nombreUsuario, email, rol } = req.body;
+    const usuarioAutenticado = req.usuario;
+
+    // Verificar permisos
+    if (usuarioAutenticado.rol !== "admin") {
+      return res.status(403).json({ mensaje: "No tienes permisos para editar usuarios" });
+    }
+
+    const usuarioEditado = await Usuario.findByIdAndUpdate(
+      id,
+      { nombreUsuario, email, rol },
+      { new: true }
+    );
+
+    if (!usuarioEditado) {
+      return res.status(404).json({ mensaje: "Usuario no encontrado" });
+    }
+
+    res.status(200).json({ mensaje: "Usuario actualizado correctamente", usuarioEditado });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ mensaje: "Error al editar usuario" });
+  }
+};
+export const eliminarUsuario = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const usuarioAutenticado = req.usuario; // Se obtiene del middleware de validación
+
+    // Verificar si el usuario tiene rol de administrador
+    if (usuarioAutenticado.rol !== "admin") {
+      return res.status(403).json({ mensaje: "No tienes permisos para eliminar usuarios" });
+    }
+
+    const usuarioEliminado = await Usuario.findByIdAndDelete(id);
+
+    if (!usuarioEliminado) {
+      return res.status(404).json({ mensaje: "Usuario no encontrado" });
+    }
+
+    res.status(200).json({ mensaje: "Usuario eliminado correctamente" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ mensaje: "Error al eliminar usuario" });
+  }
+};
+
 
