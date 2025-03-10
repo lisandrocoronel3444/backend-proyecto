@@ -90,10 +90,9 @@ export const editarUsuario = async (req, res) => {
   try {
     const { id } = req.params;
     const { nombreUsuario, email, rol } = req.body;
-    const usuarioAutenticado = req.usuario;
-
-    // Verificar permisos
-    if (usuarioAutenticado.rol !== "admin") {
+    
+    // Verificar permisos usando req.rol directamente
+    if (req.rol !== "admin") {
       return res.status(403).json({ mensaje: "No tienes permisos para editar usuarios" });
     }
 
