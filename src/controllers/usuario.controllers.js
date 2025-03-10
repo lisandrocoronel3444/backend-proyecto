@@ -114,26 +114,24 @@ export const editarUsuario = async (req, res) => {
   }
 };
 export const eliminarUsuario = async (req, res) => {
-  try {
+try {
     const { id } = req.params;
-    const usuarioAutenticado = req.usuario; // Se obtiene del middleware de validación
-
-    // Verificar si el usuario tiene rol de administrador
-    if (usuarioAutenticado.rol !== "admin") {
+    if (req.rol !== "admin") {
       return res.status(403).json({ mensaje: "No tienes permisos para eliminar usuarios" });
     }
-
+    
     const usuarioEliminado = await Usuario.findByIdAndDelete(id);
-
+    
     if (!usuarioEliminado) {
       return res.status(404).json({ mensaje: "Usuario no encontrado" });
     }
-
+    
     res.status(200).json({ mensaje: "Usuario eliminado correctamente" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ mensaje: "Error al eliminar usuario" });
   }
 };
+
 
 
